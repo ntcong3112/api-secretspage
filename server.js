@@ -7,7 +7,9 @@ const allowedOrigins = ['localhost:5001',
                       'https://www.secretspage.comm',
                       'https://secretspage.com',
                       'https://setup.secretspage.com',
-                    'http://127.0.0.1:5500'];
+                    'http://127.0.0.1:5500',
+                    'http://setup-secretspage.s3-website-ap-southeast-1.amazonaws.com',
+                  'http://secretspage.com.s3-website-ap-southeast-1.amazonaws.com'];
 app.use(cors({
   origin: function(origin, callback){
     if(!origin) return callback(null, true);
