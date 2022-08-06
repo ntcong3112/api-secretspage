@@ -3,11 +3,6 @@ const User = db.users;
 
 // Create and Save a new Tutorial
 exports.create = async (req, res) => {
-  res.set({
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
-  });
   // Validate request
   if (!req.body.name) {
     res.status(400).send({ message: "Name can not be empty!" });
