@@ -9,11 +9,7 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+
 // parse requests of content-type - application/json
 app.use(express.json());
 
@@ -35,12 +31,17 @@ db.mongoose
   });
 
 // simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Hello" });
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+
+  app.get("/", (req, res) => {
+    res.json({ message: "Hello" });
+  });
+
+  require("./app/routes/turorial.routes")(app);
 });
-
-require("./app/routes/turorial.routes")(app);
-
 // set port, listen for requests
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
