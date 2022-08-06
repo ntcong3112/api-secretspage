@@ -23,7 +23,7 @@ exports.create = async (req, res) => {
     return;
   }
 
-  let checkExist = await User.findOne({ link: req.body.link });
+  let checkExist = await User.findOne({ link: req.body.user.link });
   if (checkExist) {
     res.status(400).send({ message: "Link is already exist!" });
     return;
