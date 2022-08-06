@@ -71,7 +71,7 @@ exports.findAll = (req, res) => {
 
 // Find a single Tutorial with an id
 exports.findOne = (req, res) => {
-  // res.set({ "Access-Control-Allow-Origin": "*" });
+  res.set({ "Access-Control-Allow-Origin": "*" });
   const link = req.query.link;
   User.findOne({ link: link })
     .then((data) => {
