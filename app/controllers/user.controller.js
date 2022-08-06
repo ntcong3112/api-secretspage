@@ -4,21 +4,21 @@ const User = db.users;
 // Create and Save a new Tutorial
 exports.create = async (req, res) => {
   // Validate request
-  if (!req.body.name) {
+  if (!req.body.user.name) {
     res.status(400).send({ message: "Name can not be empty!" });
     return;
   }
-  if (!req.body.message) {
+  if (!req.body.user.message) {
     res.status(400).send({ message: "Message can not be empty!" });
     return;
   }
 
-  if (!req.body.timeStart) {
+  if (!req.body.user.timeStart) {
     res.status(400).send({ message: "Time start can not be empty!" });
     return;
   }
 
-  if (!req.body.link) {
+  if (!req.body.user.link) {
     res.status(400).send({ message: "Link can not be empty!" });
     return;
   }
