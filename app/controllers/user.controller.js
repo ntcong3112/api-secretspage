@@ -2,16 +2,36 @@ const db = require("../models");
 const User = db.users;
 
 // Create and Save a new Tutorial
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
   // Validate request
-  if (!req.body.userName) {
-    res.status(400).send({ message: "Content can not be empty!" });
+  if (!req.body.name) {
+    res.status(400).send({ message: "Name can not be empty!" });
+    return;
+  }
+  if (!req.body.message) {
+    res.status(400).send({ message: "Message can not be empty!" });
+    return;
+  }
+
+  if (!req.body.timeStart) {
+    res.status(400).send({ message: "Time start can not be empty!" });
+    return;
+  }
+
+  if (!req.body.link) {
+    res.status(400).send({ message: "Link can not be empty!" });
+    return;
+  }
+
+  let checkExist = await User.findOne({link: req.body.link});
+  if (checkExist) {
+    res.status(400).send({ message: "Link is already exist!" });
     return;
   }
 
   // Create a Tutorial
   const user = new User({
-    name: req.body.userName,
+    name: req.body.name,
     message: req.body.message,
     timeStart: req.body.timeStart,
     link: req.body.link
@@ -50,41 +70,35 @@ exports.findAll = (req, res) => {
 
 // Find a single Tutorial with an id
 exports.findOne = (req, res) => {
-  const link = req.params.link;
-  User.find({link: link})
+  const link = req.query.link;
+  User.findOne({link: link})
     .then(data => {
       if (!data)
-        res.status(404).send({ message: "Not found Tutorial with id " + id });
+        res.status(404).send({ message: "Not found User with link " + link });
       else res.send(data);
     })
     .catch(err => {
       res
         .status(500)
-        .send({ message: "Error retrieving Tutorial with id=" + id });
+        .send({ message: "Error retrieving User with link=" + link });
     });
 };
 
 // Update a Tutorial by the id in the request
 exports.update = (req, res) => {
-  if (!req.body) {
-    return res.status(400).send({
-      message: "Data to update can not be empty!"
-    });
-  }
-
-  const id = req.params.id;
-
-  Tutorial.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+  User.findOneAndUpdate({link: req.body.link}, req.body, {
+    new: true
+  })
     .then(data => {
       if (!data) {
         res.status(404).send({
-          message: `Cannot update Tutorial with id=${id}. Maybe Tutorial was not found!`
+          message: `Cannot update User with link=${link}. Maybe User was not found!`
         });
-      } else res.send({ message: "Tutorial was updated successfully." });
+      } else res.send(data);
     })
     .catch(err => {
       res.status(500).send({
-        message: "Error updating Tutorial with id=" + id
+        message: "Error updating User with link=" + link
       });
     });
 };
