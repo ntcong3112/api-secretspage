@@ -11,8 +11,10 @@ exports.create = (req, res) => {
 
   // Create a Tutorial
   const user = new User({
-    type: req.body.type,
-    userName: req.body.description,
+    name: req.body.userName,
+    message: req.body.message,
+    timeStart: req.body.timeStart,
+    link: req.body.link
   });
 
   // Save Tutorial in the database
@@ -24,7 +26,7 @@ exports.create = (req, res) => {
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Tutorial."
+          err.message || "Some error occurred while creating User."
       });
     });
 };
@@ -48,9 +50,8 @@ exports.findAll = (req, res) => {
 
 // Find a single Tutorial with an id
 exports.findOne = (req, res) => {
-  const id = req.params.id;
-
-  Tutorial.findById(id)
+  const link = req.params.link;
+  User.find({link: link})
     .then(data => {
       if (!data)
         res.status(404).send({ message: "Not found Tutorial with id " + id });

@@ -1,8 +1,10 @@
 module.exports = mongoose => {
     var schema = mongoose.Schema(
       {
-        type: String,
-        userName: String,
+        name: String,
+        message: String,
+        timeStart: Date,
+        link: String,
       },
       { timestamps: true }
     );
