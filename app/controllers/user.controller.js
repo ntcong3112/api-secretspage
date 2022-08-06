@@ -31,10 +31,10 @@ exports.create = async (req, res) => {
 
   // Create a Tutorial
   const user = new User({
-    name: req.body.name,
-    message: req.body.message,
-    timeStart: req.body.timeStart,
-    link: req.body.link,
+    name: req.body.user.name,
+    message: req.body.user.message,
+    timeStart: req.body.user.timeStart,
+    link: req.body.user.link,
   });
 
   // Save Tutorial in the database
