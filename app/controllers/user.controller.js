@@ -76,7 +76,7 @@ exports.findAll = (req, res) => {
 
 // Find a single Tutorial with an id
 exports.findOne = (req, res) => {
-  res.set({ "Access-Control-Allow-Origin": "*" });
+  // res.set({ "Access-Control-Allow-Origin": "*" });
   const link = req.query.link;
   User.findOne({ link: link })
     .then((data) => {
@@ -93,7 +93,7 @@ exports.findOne = (req, res) => {
 
 // Update a Tutorial by the id in the request
 exports.update = (req, res) => {
-  res.set({ "Access-Control-Allow-Origin": "*" });
+  // res.set({ "Access-Control-Allow-Origin": "*" });
   User.findOneAndUpdate({ link: req.body.link }, req.body, {
     new: true,
   })
