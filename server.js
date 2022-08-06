@@ -4,10 +4,10 @@ const cors = require("cors");
 const app = express();
 
 const allowedOrigins = ['localhost:5001',
-                      'secretspage.com',
-                      'www.secretspage.com',
-                      'setup.secretspage.com',
-                    '127.0.0.1:5500'];
+                      'https://www.secretspage.comm',
+                      'https://secretspage.com',
+                      'https://setup.secretspage.com',
+                    'http://127.0.0.1:5500'];
 app.use(cors({
   origin: function(origin, callback){
     if(!origin) return callback(null, true);
