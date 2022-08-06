@@ -71,7 +71,10 @@ exports.findAll = (req, res) => {
 
 // Find a single Tutorial with an id
 exports.findOne = (req, res) => {
-  res.set({ "Access-Control-Allow-Origin": "*" });
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Methods', 'GET, OPTIONS, PUT, POST, DELETE');
+  res.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+  res.set('Access-Control-Allow-Credentials', true);
   const link = req.query.link;
   User.findOne({ link: link })
     .then((data) => {
