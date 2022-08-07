@@ -1,106 +1,137 @@
 const db = require("../models");
 const User = db.users;
 
-// Create and Save a new Tutorial
-exports.create = async (req, res) => {
-  // Validate request
-  if (!req.body.user.name) {
-    res.status(400).send({ message: "Name can not be empty!" });
-    return;
-  }
-  if (!req.body.user.message) {
-    res.status(400).send({ message: "Message can not be empty!" });
-    return;
-  }
-
-  if (!req.body.user.timeStart) {
-    res.status(400).send({ message: "Time start can not be empty!" });
-    return;
-  }
-
-  if (!req.body.user.link) {
-    res.status(400).send({ message: "Link can not be empty!" });
-    return;
-  }
-
-  let checkExist = await User.findOne({ link: req.body.user.link });
-  if (checkExist) {
-    res.status(400).send({ message: "Link is already exist!" });
-    return;
-  }
-
-  // Create a Tutorial
+exports.createUser = async (req, res) => {
   const user = new User({
-    name: req.body.user.name,
-    message: req.body.user.message,
-    timeStart: req.body.user.timeStart,
-    link: req.body.user.link,
-  });
+    number: req.body.number,
+    createNew: req.body.createNew,
+  })
+  user.save().then((data) => {
+    res.send(data);   
+  })
+}
 
-  // Save Tutorial in the database
-  user
-    .save(user)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while creating User.",
-      });
-    });
+// Create and Save a new Tutorial
+exports.createNewpage = async (req, res) => {
+  // Validate request
+  try {
+    let checkExist = await User.findOne({ link: req.body.number });
+
+    if (!checkExist) {
+      res.status(400).send({ message: "User not found" });
+      return;
+    }
+
+    if (req.body.type === "love") {
+      if (!req.body.message) {
+        res.status(400).send({ message: "Message can not be empty!" });
+        return;
+      }
+
+      if (!req.body.name) {
+        res.status(400).send({ message: "Name can not be empty!" });
+        return;
+      }
+
+      if (!req.body.timeStart) {
+        res.status(400).send({ message: "Time start can not be empty!" });
+        return;
+      }
+
+      if (!req.body.link) {
+        res.status(400).send({ message: "Link can not be empty!" });
+        return;
+      }
+      const newPage = {
+        index: checkExist.pages.length,
+        name: req.body.name,
+        message: req.body.message,
+        timeStart: req.body.timeStart,
+        type: "love",
+      };
+
+      checkExist.pages.push(newPage);
+      await checkExist.save();
+      res.send(checkExist);
+    }
+    else{
+      res.status(400).send({ message: "Type not found" });
+      return;
+    }
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
 };
 
-// Retrieve all Tutorials from the database.
-exports.findAll = (req, res) => {
-  const title = req.query.title;
-  var condition = title
-    ? { title: { $regex: new RegExp(title), $options: "i" } }
-    : {};
+exports.updatePassword = async (req, res) => {
+  try {
+    let checkExist = await User.findOne({ link: req.body.number });
 
-  Tutorial.find(condition)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving tutorials.",
-      });
-    });
-};
+    if (!checkExist) {
+      res.status(400).send({ message: "User not found" });
+      return;
+    }
 
-// Find a single Tutorial with an id
-exports.findOne = (req, res) => {
-  res.set('Access-Control-Allow-Origin', '*');
-  res.set('Access-Control-Allow-Methods', 'GET, OPTIONS, PUT, POST, DELETE');
-  res.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
-  res.set('Access-Control-Allow-Credentials', true);
-  const link = req.query.link;
-  User.findOne({ link: link })
+    if (!req.body.password) {
+      res.status(400).send({ message: "Password can not be empty!" });
+      return;
+    }
+    // lam password hoi mat day xiu tai luoi
+    checkExist.password = req.body.password;
+    await checkExist.save();
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+}
+
+
+exports.findUserByNumber = (req, res) => {
+  const number = req.query.number;
+  User.findOne({ number: number })
     .then((data) => {
       if (!data)
-        res.status(404).send({ message: "Not found User with link " + link });
+        res.status(404).send({ message: "Not found User with number " + number });
       else res.send(data);
     })
     .catch((err) => {
       res
         .status(500)
-        .send({ message: "Error retrieving User with link=" + link });
+        .send({ message: "Error retrieving User with number=" + number });
+    });
+};
+
+exports.findPageByNumberAndIndex = (req, res) => {
+  const number = req.query.n;
+  const index = req.query.i;
+  User.findOne({ number: number })
+    .then((data) => {
+      if (!data || !data.pages[index]) 
+        res.status(404).send({ message: "Not found User with number " + number + " and index " + index });
+      else res.send(data.pages[index]);
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .send({ message: "Error retrieving User with number=" + number });
     });
 };
 
 // Update a Tutorial by the id in the request
-exports.update = (req, res) => {
+exports.updatePageByNumberAndIndex = (req, res) => {
   // res.set({ "Access-Control-Allow-Origin": "*" });
-  User.findOneAndUpdate({ link: req.body.link }, req.body, {
-    new: true,
-  })
+User.findOne({ number: req.body.number })
     .then((data) => {
       if (!data) {
         res.status(404).send({
           message: `Cannot update User with link=${link}. Maybe User was not found!`,
         });
-      } else res.send(data);
+      } else {
+        newData = req.body
+        delete newData.number
+        data.pages[req.body.index] = newData;
+        data.save();
+        res.send(data);
+      }
     })
     .catch((err) => {
       res.status(500).send({
@@ -110,54 +141,35 @@ exports.update = (req, res) => {
 };
 
 // Delete a Tutorial with the specified id in the request
-exports.delete = (req, res) => {
-  const id = req.params.id;
-
-  Tutorial.findByIdAndRemove(id, { useFindAndModify: false })
+exports.deletePageByNumberAndIndex = (req, res) => {
+  const number = req.query.number;
+  const index = req.query.index;
+  User.findOne({ number: number })
     .then((data) => {
       if (!data) {
         res.status(404).send({
-          message: `Cannot delete Tutorial with id=${id}. Maybe Tutorial was not found!`,
+          message: `Cannot delete User with link=${link}. Maybe User was not found!`,
         });
       } else {
-        res.send({
-          message: "Tutorial was deleted successfully!",
-        });
+        data.pages.splice(index, 1);
+        data.save();
+        res.send(data);
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Tutorial with id=" + id,
+        message: "Error deleting User with link=" + link,
       });
     });
-};
+}
 
-// Delete all Tutorials from the database.
-exports.deleteAll = (req, res) => {
-  Tutorial.deleteMany({})
-    .then((data) => {
-      res.send({
-        message: `${data.deletedCount} Tutorials were deleted successfully!`,
-      });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all tutorials.",
-      });
-    });
-};
 
-// Find all published Tutorials
-exports.findAllPublished = (req, res) => {
-  Tutorial.find({ published: true })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving tutorials.",
-      });
-    });
-};
+
+
+// res.set("Access-Control-Allow-Origin", "*");
+// res.set("Access-Control-Allow-Methods", "GET, OPTIONS, PUT, POST, DELETE");
+// res.set(
+//   "Access-Control-Allow-Headers",
+//   "Origin, X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept"
+// );
+// res.set("Access-Control-Allow-Credentials", true);

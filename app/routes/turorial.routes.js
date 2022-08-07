@@ -3,12 +3,17 @@ module.exports = app => {
   const user = require("../controllers/user.controller.js");
   var router = require("express").Router();
 
-  router.post("/user/create", user.create);
+  router.post("/user/create-page", user.createNewpage);
   
-  router.post("/user/update", user.update);
+  router.post("/admin/create-user", user.createUser);
 
-  router.get("/user", user.findOne);
+  router.post("/user/update-password", user.updatePassword);
 
+  router.post("/user/update-page", user.updatePageByNumberAndIndex);
+
+  router.get("/user", user.findUserByNumber);
+
+  router.get("/user/page", user.findPageByNumberAndIndex);
 
   // router.delete("/:id", tutorials.delete);
 
