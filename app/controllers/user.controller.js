@@ -38,11 +38,6 @@ exports.createNewpage = async (req, res) => {
         res.status(400).send({ message: "Time start can not be empty!" });
         return;
       }
-
-      if (!req.body.link) {
-        res.status(400).send({ message: "Link can not be empty!" });
-        return;
-      }
       const newPage = {
         index: checkExist.pages.length,
         name: req.body.name,
