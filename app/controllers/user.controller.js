@@ -23,7 +23,7 @@ exports.createUser = async (req, res) => {
 exports.createNewpage = async (req, res) => {
   // Validate request
   try {
-    let checkExist = await User.findOne({ link: req.body.number });
+    let checkExist = await User.findOne({ number: req.body.number });
     if(checkExist.createNew===0){
       res.status(400).send({ message: "You can not create new page" });
       return;
@@ -92,7 +92,7 @@ exports.login = async (req, res) => {
 
 exports.updatePassword = async (req, res) => {
   try {
-    let checkExist = await User.findOne({ link: req.body.number });
+    let checkExist = await User.findOne({ number: req.body.number });
 
     if (!checkExist) {
       res.status(400).send({ message: "User not found" });
