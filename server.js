@@ -3,25 +3,29 @@ const cors = require("cors");
 
 const app = express();
 
-const allowedOrigins = ['localhost:5001',
-                      'https://www.secretspage.comm',
-                      'https://secretspage.com',
-                      'https://setup.secretspage.com',
-                    'http://127.0.0.1:5500',
-                    'http://setup-secretspage.s3-website-ap-southeast-1.amazonaws.com',
-                  'http://secretspage.com.s3-website-ap-southeast-1.amazonaws.com'];
-app.use(cors({
-  origin: function(origin, callback){
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  }
-
-}));
-
+const allowedOrigins = [
+  "localhost:5001",
+  "http://localhost:3000",
+  "https://www.secretspage.comm",
+  "https://secretspage.com",
+  "https://setup.secretspage.com",
+  "http://127.0.0.1:5500",
+  "http://setup-secretspage.s3-website-ap-southeast-1.amazonaws.com",
+  "http://secretspage.com.s3-website-ap-southeast-1.amazonaws.com",
+];
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg =
+          "The CORS policy for this site does not allow access from the specified Origin.";
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
+  })
+);
 
 // parse requests of content-type - application/json
 app.use(express.json());
@@ -33,12 +37,12 @@ const db = require("./app/models");
 db.mongoose
   .connect(db.url, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   })
   .then(() => {
     console.log("Connected to the database!");
   })
-  .catch(err => {
+  .catch((err) => {
     console.log("Cannot connect to the database!", err);
     process.exit();
   });
