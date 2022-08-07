@@ -100,8 +100,10 @@ exports.updatePassword = async (req, res) => {
     }
     // lam password hoi mat day xiu tai luoi
     checkExist.password = req.body.password;
+    checkExist.firstLogin = false;
     await checkExist.save();
-    res.send("Update password success");
+    delete checkExist.password;
+    res.send(checkExist);
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
