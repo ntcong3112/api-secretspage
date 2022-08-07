@@ -9,7 +9,7 @@ exports.createUser = async (req, res) => {
     });
   }
   const user = new User({
-    number: req.body.number,
+    number: "123",
     createNew: req.body.createNew,
     firstLogin: true,
     pages: [],
