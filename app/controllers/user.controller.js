@@ -156,7 +156,7 @@ User.findOne({ number: req.body.number })
     .then((data) => {
       if (!data) {
         res.status(404).send({
-          message: `Cannot update User with link=${link}. Maybe User was not found!`,
+          message: `Cannot update User`,
         });
       } else {
         newData = req.body
@@ -167,7 +167,7 @@ User.findOne({ number: req.body.number })
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating User with link=" + link,
+        message: "Error updating User",
       });
     });
 };
@@ -180,7 +180,7 @@ exports.deletePageByNumberAndIndex = (req, res) => {
     .then((data) => {
       if (!data) {
         res.status(404).send({
-          message: `Cannot delete User with link=${link}. Maybe User was not found!`,
+          message: `Cannot delete User`,
         });
       } else {
         data.pages.splice(index, 1);
@@ -190,7 +190,7 @@ exports.deletePageByNumberAndIndex = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error deleting User with link=" + link,
+        message: "Error deleting User",
       });
     });
 }
