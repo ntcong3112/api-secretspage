@@ -5,6 +5,7 @@ exports.createUser = async (req, res) => {
   const user = new User({
     number: req.body.number,
     createNew: req.body.createNew,
+    firstLogin: true
   })
   user.save().then((data) => {
     res.send(data);   
@@ -63,6 +64,27 @@ exports.createNewpage = async (req, res) => {
   }
 };
 
+exports.login = async (req, res) => {
+  const number = req.body.number;
+  const password = req.body.password;
+  User.findOne({ number: number })
+    .then((data) => {
+      if (!data) {
+        res.status(404).send({ message: "User not found" });
+        return;
+      }
+      if (data.password !== password) {
+        res.status(400).send({ message: "Password is not correct" });
+        return;
+      }
+      delete data.password;
+      res.send(data);
+    }).catch((err) => {
+      res.status(500).send({ message: err.message });
+    }
+    );
+}
+
 exports.updatePassword = async (req, res) => {
   try {
     let checkExist = await User.findOne({ link: req.body.number });
@@ -79,6 +101,7 @@ exports.updatePassword = async (req, res) => {
     // lam password hoi mat day xiu tai luoi
     checkExist.password = req.body.password;
     await checkExist.save();
+    res.send("Update password success");
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
@@ -91,7 +114,10 @@ exports.findUserByNumber = (req, res) => {
     .then((data) => {
       if (!data)
         res.status(404).send({ message: "Not found User with number " + number });
-      else res.send(data);
+      else {
+        delete data.password
+        res.send(data);
+      }
     })
     .catch((err) => {
       res
