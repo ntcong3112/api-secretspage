@@ -163,7 +163,7 @@ User.findOne({ number: req.body.number })
       } else {
         newData = req.body
         data.pages[req.body.index] = newData;
-        data.save();
+        User.update({ number: req.body.number }, { $set: { pages: data.pages } })
         res.send(data.pages[req.body.index]);
       }
     })
