@@ -17,7 +17,10 @@ exports.createNewpage = async (req, res) => {
   // Validate request
   try {
     let checkExist = await User.findOne({ link: req.body.number });
-
+    if(checkExist.createNew===0){
+      res.status(400).send({ message: "You can not create new page" });
+      return;
+    }
     if (!checkExist) {
       res.status(400).send({ message: "User not found" });
       return;
@@ -45,7 +48,7 @@ exports.createNewpage = async (req, res) => {
         timeStart: req.body.timeStart,
         type: "love",
       };
-
+      checkExist.createNew -= 1;
       checkExist.pages.push(newPage);
       await checkExist.save();
       res.send(checkExist);
