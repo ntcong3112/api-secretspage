@@ -153,10 +153,9 @@ User.findOne({ number: req.body.number })
         });
       } else {
         newData = req.body
-        delete newData.number
         data.pages[req.body.index] = newData;
         data.save();
-        res.send(data);
+        res.send(data.pages[req.body.index]);
       }
     })
     .catch((err) => {
