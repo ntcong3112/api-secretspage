@@ -2,6 +2,12 @@ const db = require("../models");
 const User = db.users;
 
 exports.createUser = async (req, res) => {
+  let checkExist = await User.findOne({ link: req.body.number });
+  if (checkExist) {
+    return res.status(400).json({
+      message: "User already exists",
+    });
+  }
   const user = new User({
     number: req.body.number,
     createNew: req.body.createNew,
@@ -9,7 +15,7 @@ exports.createUser = async (req, res) => {
     pages: [],
   })
   user.save().then((data) => {
-    res.send(data);   
+    res.send(data,req.number);   
   })
 }
 
