@@ -4,19 +4,21 @@ const User = db.users;
 exports.createUser = async (req, res) => {
   let checkExist = await User.findOne({ number: req.body.number });
   if (checkExist) {
-    return res.status(400).json({
+    res.status(400).send({
       message: "User already exists",
     });
   }
-  const user = new User({
-    number: "123",
-    createNew: req.body.createNew,
-    firstLogin: true,
-    pages: [],
-  })
-  user.save().then((data) => {
-    res.send(data,req.number);   
-  })
+  else{
+    const user = new User({
+      number: req.body.number,
+      createNew: req.body.createNew,
+      firstLogin: true,
+      pages: [],
+    })
+    user.save().then((data) => {
+      res.send(data);   
+    })
+  }
 }
 
 // Create and Save a new Tutorial
