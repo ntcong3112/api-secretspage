@@ -5,7 +5,8 @@ exports.createUser = async (req, res) => {
   const user = new User({
     number: req.body.number,
     createNew: req.body.createNew,
-    firstLogin: true
+    firstLogin: true,
+    pages: [],
   })
   user.save().then((data) => {
     res.send(data);   
