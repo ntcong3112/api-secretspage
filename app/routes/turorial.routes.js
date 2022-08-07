@@ -13,7 +13,7 @@ module.exports = app => {
 
   router.get("/user", user.findUserByNumber);
 
-  router.get("/user/login", user.login);
+  router.post("/user/login", user.login);
 
 
   router.get("/user/page", user.findPageByNumberAndIndex);
